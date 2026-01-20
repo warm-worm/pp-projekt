@@ -29,7 +29,7 @@ internal class Program
     }   */
 
     //test walki 
-    static void Main(string[] args)
+    /*static void Main(string[] args)
     {
         Console.WriteLine("=== TEST 1: WZAJEMNA WALKA ===");
         TestMutualAttack();
@@ -89,5 +89,67 @@ internal class Program
             Console.WriteLine("WYNIK: Sukces! Yay! Elf zginął i nie zdążył oddać (Orc nie stracił HP).");
         else
             Console.WriteLine("WYNIK: Coś nie tak – Orc stracił HP mimo że zabił przeciwnika jednym ciosem.");
+    }*/
+
+    //testowanie biomów
+
+        static void Main(string[] args)
+        {
+            // 1. Inicjalizacja
+            var map = new SmallTorusMap(10, 10);
+            var orc = new Orc("Gorgul", 1, 5);  // Bazowy Rage 5
+            var elf = new Elf("Elrond", 1, 5);  // Bazowy Agility 5
+
+            Point pOrc = new Point(2, 2);
+            Point pElf = new Point(2, 3);
+
+            orc.InitMapAndPosition(map, pOrc);
+            elf.InitMapAndPosition(map, pElf);
+
+            Console.WriteLine("======= TEST PRZEPŁYWU BIOMÓW =======");
+
+            // Testujemy po kolei 3 biomy
+            ExecuteFullTurn(map, orc, elf, Biome.Forest, pOrc, pElf);
+            ExecuteFullTurn(map, orc, elf, Biome.Mountains, pOrc, pElf);
+            ExecuteFullTurn(map, orc, elf, Biome.Snowland, pOrc, pElf);
+
+            Console.WriteLine("======= KONIEC TESTÓW =======");
+        }
+
+        static void ExecuteFullTurn(Map map, Orc orc, Elf elf, Biome biome, Point startPos, Point targetPos)
+        {
+            Console.WriteLine($"\n>>> ZMIANA BIOMU NA: {biome.ToString().ToUpper()} <<<");
+            WorldSettings.CurrentBiome = biome;
+
+            // KROK 1: Pokaż wpływ samego biomu zanim postacie się ruszą
+            Console.WriteLine("\n[1. Stan po zmianie biomu (przed ruchem)]:");
+            PrintStats(orc, elf);
+
+            // KROK 2: Walka
+            Console.WriteLine($"\n[2. AKCJA: {orc.Name} wchodzi na pole {targetPos}, gdzie stoi {elf.Name}]");
+            map.Move(orc, orc.Position, targetPos);
+
+            // KROK 3: Wynik walki
+            Console.WriteLine("\n[3. Stan po starciu na tym biomie]:");
+            PrintStats(orc, elf);
+
+            // KROK 4: Wyjście z pola (przygotowanie do następnego biomu)
+            // Musimy ich rozdzielić, żeby w następnym teście znów mogli na siebie "wejść"
+            Console.WriteLine("\n[4. Sprzątanie: Rozdzielanie postaci i leczenie...]");
+            map.Move(orc, orc.Position, startPos); // Orc wraca na (2,2)
+            orc.Health = 100; // Leczymy ich, żeby testy były czytelne
+            elf.Health = 100;
+            Console.WriteLine(new string('=', 45));
+        }
+
+        static void PrintStats(Orc orc, Elf elf)
+        {
+            // Pobieramy aktualne modyfikatory tylko do wyświetlenia w logu
+            var (aMod, rMod) = WorldSettings.GetModifiers();
+
+            Console.WriteLine($"  {orc.Name,-10} | HP: {orc.Health,3} | Power: {orc.Power,3} | (Rage: {orc.Rage} {rMod:+#;-#;0} z biomu)");
+            Console.WriteLine($"  {elf.Name,-10} | HP: {elf.Health,3} | Power: {elf.Power,3} | (Agility: {elf.Agility} {aMod:+#;-#;0} z biomu)");
+        }
     }
-}
+
+

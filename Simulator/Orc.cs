@@ -24,10 +24,15 @@ public class Orc : Creature
         target.TakeDamage(AttackStrength);
     }
 
-    public Orc(string name, int level = 1, int rage = 1) : base(name, level)
+    public Orc(string name, int level = 1, int rage = 1) : base(name, level)//tu zmiany, żeby biome wpływał na rage
     { 
-        Rage = rage; 
-        CalculatePower = () => 7 * Level + 3 * Rage; 
+        Rage = rage;
+        CalculatePower = () => {
+            var (_, rageMod) = WorldSettings.GetModifiers();
+            // Power bierze pod uwagę bazowy Rage + bonus z biomu
+            int effectiveRage = Validator.Limiter(Rage + rageMod, 0, 20);
+            return 7 * Level + 3 * effectiveRage;
+        };
     }
 
     public void Hunt()

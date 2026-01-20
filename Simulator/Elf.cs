@@ -12,10 +12,14 @@ public class Elf : Creature
     }
 
     public Elf() : this("Elf") { }
-    public Elf(string name, int level = 1, int agility = 1) : base(name, level)
+    public Elf(string name, int level = 1, int agility = 1) : base(name, level)//tu zmiany żeby biom wpływał na agility
     {
         Agility = agility;
-        CalculatePower = () => Level * 8 + Agility * 2;
+        CalculatePower = () => {
+            var (agilityMod, _) = WorldSettings.GetModifiers();
+            int effectiveAgility = Validator.Limiter(Agility + agilityMod, 0, 20);
+            return Level * 8 + effectiveAgility * 2;
+        };
     }
 
 

@@ -85,11 +85,39 @@ public abstract class Map // klasa abstrakcyjna, baza dla innych map
     /// <summary>
     /// Move creature from one point to another.
     /// </summary>
-    public void Move(IMappable mappable, Point from, Point to)
+
+    public void Move(IMappable mappable, Point from, Point here)
     {
-        Remove(mappable, from); // zabieramy ze starego
-        Add(mappable, to);      // dajemy na nowe
+        Remove(mappable, from);
+
+        // Sprawdzamy czy na polu (here) ktoś już jest
+        var residents = At(here).ToList();
+        if (mappable is Creature attacker && !attacker.IsDead)
+        {
+            foreach (var resident in residents)
+            {
+                if (resident is Creature defender && !defender.IsDead)
+                {
+                    // Najpierw atakuje ten, który wszedł na pole
+                    attacker.Attack(defender);
+
+                    // Jeśli obrońca przeżył, też od razu atakuje
+                    if (!defender.IsDead)
+                    {
+                        defender.Attack(attacker);
+                    }
+                }
+            }
+        }
+
+        // Dodajemy postać na nowe pole jeśli nadal żyje, żeby martwa postać nie była na mapie
+        if (mappable is Creature c && !c.IsDead)
+        {
+            Add(mappable, here);
+        }
     }
+
+
 
     /// <summary>
     /// Get List of creatures.

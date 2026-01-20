@@ -15,6 +15,15 @@ public class Orc : Creature
     {
         CalculatePower = () => 7 * Level + 3 * Rage;
     }
+
+    public int AttackStrength => Rage * 2 + Level; //do ataku używamy Rage i Level
+
+    public override void Attack(Creature target) //atak na inna istote
+    {
+        if (IsDead) return;
+        target.TakeDamage(AttackStrength);
+    }
+
     public Orc(string name, int level = 1, int rage = 1) : base(name, level)
     { 
         Rage = rage; 

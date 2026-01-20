@@ -58,7 +58,10 @@ public class SimulationLog
         {
             for (int y = 0; y < SizeY; y++)
             {
-                var objects = _simulation.Map.At(x, y); // co tu stoi?
+                
+                var objects = _simulation.Map.At(x, y) // filtrujemy tylko te obiekty, które nie są martwymi stworami (co tu stoi i czy jest żywe)
+                    .Where(m => m is not Creature c || !c.IsDead)
+                    .ToList();
                 if (objects.Count == 1)
                 {
                     symbols.Add(new Point(x, y), objects[0].MapSymbol); // jeden obiekt

@@ -10,6 +10,7 @@ public abstract class Creature : IMappable
 
     private string _name = "Unknown"; // wartosc domyslna name
     private int _level = 1;           // wartosc domyslna level
+    private int _health = 100;            //domyślne hp
 
     public string Name
     {
@@ -29,11 +30,32 @@ public abstract class Creature : IMappable
         }
     }
 
+    public int Health
+    {
+        get => _health;
+        set => _health = Validator.Limiter(value, 0, 200); // Max 200 HP
+    }
+
+    public abstract void Attack(Creature target); // abstrakcyjna metoda ataku
     public Map? Map => _map; // wlasciwosc do odczytu mapy
     public Point Position => _point; // wlasciwosc do odczytu pozycji
 
     // symbol abstrakcyjny, bo ork i elf maja inny (wymagany przez IMappable)
     public abstract char MapSymbol { get; }
+
+    public bool IsDead => Health <= 0;
+
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
+        if (IsDead)
+        {
+            // usunięcie z mapy jak sraci całe hp
+            Map?.Remove(this, Position);
+        }
+    }
+
+
 
     public void InitMapAndPosition(Map map, Point startingPosition)
     {

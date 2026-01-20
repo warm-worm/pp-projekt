@@ -18,6 +18,15 @@ public class Elf : Creature
         CalculatePower = () => Level * 8 + Agility * 2;
     }
 
+
+    public int AttackStrength => Agility * 3 + Level; //elf używa Agility i Level do ataku
+
+    public override void Attack(Creature target) //atak na inna istote
+    {
+        if (IsDead) return;
+        target.TakeDamage(AttackStrength);
+    }
+
     public void Sing()
     {
         _singCount++;

@@ -12,10 +12,14 @@
         <div class="navbar">
             <b>SimWeb</b>
             <nav>
-                <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Privacy" ? "active" : "")"
-                   asp-area="" asp-page="/Privacy">Informacje</a>
                 <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")"
                    asp-area="" asp-page="/Index">Symulacja</a>
+
+                <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Rules" ? "active" : "")"
+                   asp-area="" asp-page="/Rules">Zasady Gry</a>
+
+                <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Privacy" ? "active" : "")"
+                   asp-area="" asp-page="/Privacy">O projekcie</a>
             </nav>
         </div>
     </header>

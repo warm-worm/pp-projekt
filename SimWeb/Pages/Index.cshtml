@@ -1,88 +1,147 @@
 ﻿@page
+@using Simulator
 @model IndexModel
 @{
-    ViewData["Title"] = "Symulacja";
+    ViewData["Title"] = "SimWeb - Symulacja";
 }
 
-<div class="text-center">
-    <div class="controls">
-        <form method="post">
-            <button type="submit" name="action" value="prev" class="btn">&larr;</button>
-        </form>
+<div class="controls-settings" style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px;">
+    <form method="post" style="display: flex; justify-content: center; gap: 30px; align-items: center; flex-wrap: wrap;">
 
-        <h3>Tura @Model.TurnIndex</h3>
+        <div style="text-align: center;">
+            <h4 style="margin: 0 0 10px 0; color: #333;">Wybierz Biom:</h4>
+            <div class="btn-group">
+                <button type="submit" name="map" value="Forest"
+                        class="btn @(Model.CurrentBiomeName == "Forest" ? "btn-success" : "btn-outline-success")">
+                    🌳 Las (Rabbits)
+                </button>
+                <button type="submit" name="map" value="Mountains"
+                        class="btn @(Model.CurrentBiomeName == "Mountains" ? "btn-secondary" : "btn-outline-secondary")">
+                    🏔️ Góry (Goats)
+                </button>
+                <button type="submit" name="map" value="Snowland"
+                        class="btn @(Model.CurrentBiomeName == "Snowland" ? "btn-info" : "btn-outline-info")">
+                    ❄️ Śnieg (Penguins)
+                </button>
+            </div>
+        </div>
 
-        <form method="post">
-            <button type="submit" name="action" value="next" class="btn">&rarr;</button>
-        </form>
+        <div style="text-align: center;">
+            <h4 style="margin: 0 0 10px 0; color: #333;">Tryb:</h4>
+            <button type="submit" name="toggleCats" value="true" class="btn"
+                    style="background-color: @(Model.IsCatMode ? "#ffb6c1" : "#e0e0e0"); font-weight: bold;">
+                @(Model.IsCatMode ? "😻 WYŁĄCZ KOTY" : "😿 WŁĄCZ KOTY")
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<div class="controls">
+    <form method="post">
+        <button type="submit" name="action" value="prev" class="btn">&larr; Poprzednia</button>
+        <span style="font-size: 1.2rem; font-weight: bold;">Tura @Model.TurnIndex / @Model.TotalTurns</span>
+        <button type="submit" name="action" value="next" class="btn">Następna &rarr;</button>
+    </form>
+</div>
+
+<div class="simulation-wrapper">
+    <div class="y-axis">
+        @for (int y = Model.SizeY - 1; y >= 0; y--)
+        {
+            <div class="y-axis-label">@y</div>
+        }
     </div>
 
-    <div class="simulation-wrapper">
-
-        <div class="y-axis">
+    <div class="map-column">
+        <div class="map-container">
             @for (int y = Model.SizeY - 1; y >= 0; y--)
             {
-                <div class="y-axis-label">@y</div>
+                @for (int x = 0; x < Model.SizeX; x++)
+                {
+                    var point = new Simulator.Point(x, y);
+                    string symbol = "";
+
+                    if (Model.CurrentTurn.Symbols.ContainsKey(point))
+                    {
+                        symbol = Model.CurrentTurn.Symbols[point];
+                    }
+
+                    <div class="map-cell">
+                        @if (!string.IsNullOrEmpty(symbol))
+                        {
+                            string imgSrc = "unknown.png";
+
+                            if (Model.IsCatMode)
+                            {
+                                // --- TRYB KOCI (IsCatMode = TRUE) ---
+                                // Tu mamy konkretne grafiki spotkań (widoczne na screenshocie)
+                                if (symbol.Length > 1)
+                                {
+                                    if (symbol.Length == 4)
+                                    {
+                                        imgSrc = "all4.png";
+                                    }
+                                    else if (symbol.Length == 3)
+                                    {
+                                        if (symbol.Contains('A') && symbol.Contains('E') && symbol.Contains('O')) imgSrc = "elf_orc_rabbit.png";
+                                        else if (symbol.Contains('B') && symbol.Contains('E') && symbol.Contains('O')) imgSrc = "elf_orc_bird.png";
+                                        else if (symbol.Contains('A') && symbol.Contains('B') && symbol.Contains('E')) imgSrc = "elf_rabbit_bird.png";
+                                        else if (symbol.Contains('A') && symbol.Contains('B') && symbol.Contains('O')) imgSrc = "orc_rabbit_bird.png";
+                                        else imgSrc = "all4.png"; // fallback dla 3
+                                    }
+                                    else // Pary (2 postacie)
+                                    {
+                                        if (symbol.Contains('E') && symbol.Contains('O')) imgSrc = "elf_orc.png";
+                                        else if (symbol.Contains('A') && symbol.Contains('O')) imgSrc = "orc_rabbit.png";
+                                        else if (symbol.Contains('A') && symbol.Contains('E')) imgSrc = "elf_rabbit.png";
+                                        else if (symbol.Contains('B') && symbol.Contains('O')) imgSrc = "orc_bird.png";
+                                        else if (symbol.Contains('B') && symbol.Contains('E')) imgSrc = "elf_bird.png";
+                                        else if (symbol.Contains('A') && symbol.Contains('B')) imgSrc = "rabbit_bird.png";
+                                        else imgSrc = "all4.png"; // fallback
+                                    }
+                                }
+                                else
+                                {
+                                    // Pojedynczy kot
+                                    char s = char.ToUpper(symbol[0]);
+                                    if (s == 'O') imgSrc = "orc-cat.png";
+                                    else if (s == 'E') imgSrc = "elf-cat.png";
+                                    else if (s == 'A') imgSrc = "rabbit-cat.png";
+                                    else if (s == 'B') imgSrc = "bird-cat.png";
+                                }
+                            }
+                            else
+                            {
+                                // --- TRYB ZWYKŁY (IsCatMode = FALSE) ---
+                                // Tu nie mamy grafik spotkań -> combo-80.png
+                                if (symbol.Length > 1)
+                                {
+                                    imgSrc = "combo-80.png";
+                                }
+                                else
+                                {
+                                    // Pojedyncza zwykła postać
+                                    char s = char.ToUpper(symbol[0]);
+                                    if (s == 'O') imgSrc = "ork-80.png";
+                                    else if (s == 'E') imgSrc = "elf-80.png";
+                                    else if (s == 'A') imgSrc = "rabbit-80.png";
+                                    else if (s == 'B') imgSrc = "eagle-80.png";
+                                }
+                            }
+
+                            <img src="~/images/@imgSrc" alt="@symbol" title="@symbol" />
+                        }
+                    </div>
+                }
             }
         </div>
 
-        <div class="map-column">
-
-            <div class="map-container">
-                @for (int y = Model.SizeY - 1; y >= 0; y--)
-                {
-                    @for (int x = 0; x < Model.SizeX; x++)
-                    {
-                        var point = new Simulator.Point(x, y);
-                        string imageFile = ""; // domyslnie puste
-
-                        // sprawdzamy czy na tym polu cos stoi w tej turze
-                        if (Model.CurrentTurn.Symbols.ContainsKey(point))
-                        {
-                            char symbol = Model.CurrentTurn.Symbols[point];
-                            // mapujemy symbol na plik graficzny
-                            switch (symbol)
-                            {
-                                case 'O': imageFile = "ork-80.png"; break;
-                                case 'E': imageFile = "elf-80.png"; break;
-                                case 'A': imageFile = "rabbit-80.png"; break;
-                                case 'B': imageFile = "eagle-80.png"; break;
-                                case 'b': imageFile = "emu-80.png"; break;
-                                case 'X': imageFile = "combo-80.png"; break;
-                                default: break;
-                            }
-                        }
-
-                        <div class="map-cell">
-                            @if (!string.IsNullOrEmpty(imageFile))
-                            {
-                                <img src="~/images/@imageFile" alt="@imageFile" />
-                            }
-                        </div>
-                    }
-                }
-            </div>
-
-            <div class="x-axis">
-                @for (int x = 0; x < Model.SizeX; x++)
-                {
-                    <div class="x-axis-label">@x</div>
-                }
-            </div>
-
+        <div class="x-axis">
+            @for (int x = 0; x < Model.SizeX; x++)
+            {
+                <div class="x-axis-label">@x</div>
+            }
         </div>
-    </div>
-
-    <div class="info-box">
-        @if (Model.TurnIndex == 0)
-        {
-            <span style="color: brown;">Pozycje startowe</span>
-        }
-        else
-        {
-            <span style="color: darkblue;">@Model.CurrentTurn.Mappable</span>
-            <span> &rArr; </span>
-            <span style="color: brown;">@Model.CurrentTurn.Move</span>
-        }
     </div>
 </div>

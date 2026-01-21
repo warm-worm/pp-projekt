@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Simulator\Simulator.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
 </Project>

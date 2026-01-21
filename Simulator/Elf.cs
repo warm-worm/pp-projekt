@@ -8,7 +8,7 @@ public class Elf : Creature
     public int Agility
     {
         get => _agility;
-        init => _agility = Validator.Limiter(value, 0, 10);
+        set => _agility = Validator.Limiter(value, 0, 20);
     }
 
     public Elf() : this("Elf") { }

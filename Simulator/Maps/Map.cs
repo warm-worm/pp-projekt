@@ -89,43 +89,63 @@ public abstract class Map // klasa abstrakcyjna, baza dla innych map
     public void Move(IMappable mappable, Point from, Point here)
     {
         Remove(mappable, from);
-
         var residents = At(here).ToList();
 
         if (mappable is Creature attacker && !attacker.IsDead)
         {
-            // ZASADA SNOWLAND: Jeśli jest zima, nie walczymy
-            if (WorldSettings.CurrentBiome == Biome.Snowland)
+            foreach (var resident in residents)
             {
-                // Tutaj nie wywołujemy Attack(), postacie po prostu stoją na jednym polu (jest za zimno by walczyć XDD)
-            }
-            else
-            {
-                foreach (var resident in residents)
+                // INTERAKCJA ORKA (HUNT)
+                if (attacker is Orc orc && resident is PackAnimal pack)
                 {
-                    if (resident is Creature defender && !defender.IsDead)
+                    // Sprawdzamy czy to właściwe zwierzę dla właściwego biomu
+                    bool canHunt = (WorldSettings.CurrentBiome == Biome.Mountains && pack is Goat) ||
+                                   (WorldSettings.CurrentBiome == Biome.Forest && pack is Rabbit);
+
+                    if (canHunt)
                     {
-                        // Atak 1
-                        attacker.Attack(defender);
+                        int rageBonus = (pack is Goat) ? 2 : 1;
+                        int hpBonus = (pack is Goat) ? 10 : 5;
 
-                        // ZASADA FOREST: Elf atakuje drugi raz
-                        if (WorldSettings.CurrentBiome == Biome.Forest && attacker is Elf && !defender.IsDead)
-                        {
-                            attacker.Attack(defender);
-                        }
+                        orc.Rage = Validator.Limiter(orc.Rage + rageBonus, 0, 20);
+                        orc.Health = Math.Min(100, orc.Health + hpBonus);
 
-                        // Kontratak
-                        if (!defender.IsDead)
-                        {
-                            defender.Attack(attacker);
-                        }
+                        pack.Count--;
+                        if (pack.Count <= 0) Remove(pack, here); // Stado znika, gdy zjesz ostatniego
+                        continue; // Po jedzeniu nie szukamy innych akcji na tym samym obiekcie
                     }
+                }
+
+                // INTERAKCJA ELFA (SING)
+                if (attacker is Elf elf && resident is Birds bird)
+                {
+                    // Bonusy od różnych ptaków
+                    if (bird is Eagle) { elf.Agility = Validator.Limiter(elf.Agility + 1, 0, 20); elf.Health += 2; }
+                    else if (bird is Nightingale) { elf.Agility = Validator.Limiter(elf.Agility + 2, 0, 20); elf.Health += 1; }//Słowik po angielsku to Nightingale lol
+                    else if (bird is Penguin) { elf.Agility = Validator.Limiter(elf.Agility + 1, 0, 20); elf.Health += 6; }
+
+                    Remove(bird, here); // Ptak odlatuje po interakcji(żeby nie było za łatwo tym elfom XD)
+                    continue;
+                }
+
+                // KLASYCZNA WALKA (ORK VS ELF)
+                if (WorldSettings.CurrentBiome != Biome.Snowland && resident is Creature defender && !defender.IsDead) // Walka nie odbywa się na śnieżnej krainie
+                {
+                    attacker.Attack(defender);
+                    if (WorldSettings.CurrentBiome == Biome.Forest && attacker is Elf && !defender.IsDead)
+                    {
+                        attacker.Attack(defender); // Podwójny atak elfa w lesie
+                    }
+
+                    if (!defender.IsDead) defender.Attack(attacker); // Kontratak
                 }
             }
         }
 
-        // Dodanie na mapę (tylko jeśli żyje)
+        // Dodanie postaci na nowe pole, jeśli przeżyła interakcje/walkę
         if (mappable is Creature c && c.IsDead) return;
+        if (mappable is Animals a && a.Health <= 0) return; // Zabezpieczenie dla zwierząt
+
         Add(mappable, here);
     }
 

@@ -112,49 +112,37 @@ public class IndexModel : PageModel
     // metoda pomocnicza tworzaca konkretna symulacje
     private SimulationLog GetSimulationLog()
     {
-        // jak juz mamy policzone to zwracamy gotowca
         if (_cachedLog != null) return _cachedLog;
 
         SmallTorusMap map = new(8, 6);
         List<IMappable> mappables = new();
         List<Point> points = new();
 
-        // 1. Bohaterowie (s¹ zawsze, niezale¿nie od mapy)
-        mappables.Add(new Orc("Gorbag")); points.Add(new(2, 2));
-        mappables.Add(new Elf("Elandor")); points.Add(new(3, 1));
+        // 1. Bohaterowie
+        mappables.Add(new Orc("Gorbag", 1, 5)); points.Add(new(2, 2));
+        mappables.Add(new Elf("Elandor", 1, 5)); points.Add(new(3, 1));
 
-        // 2. Zwierzêta - zale¿ne od BIOMU
+        // 2. Zwierzêta - logika zgodna z Twoimi nowymi klasami
         switch (WorldSettings.CurrentBiome)
         {
             case Biome.Forest:
-                // Las: Króliki, Or³y, Strusie
-                mappables.Add(new Animals { Description = "Rabbits", Size = 10 }); points.Add(new(5, 5));
-                mappables.Add(new Birds { Description = "Eagles", CanFly = true }); points.Add(new(7, 3));
-                mappables.Add(new Birds { Description = "Ostriches", CanFly = false }); points.Add(new(0, 4));
+                mappables.Add(new Rabbit()); points.Add(new(5, 5));
+                mappables.Add(new Nightingale()); points.Add(new(7, 3));
                 break;
 
             case Biome.Mountains:
-                // Góry: Kozy (zamiast królików) i Or³y
-                mappables.Add(new Animals { Description = "Goats", Size = 5 }); points.Add(new(6, 5));
-                mappables.Add(new Birds { Description = "Eagles", CanFly = true }); points.Add(new(1, 1));
+                mappables.Add(new Goat()); points.Add(new(6, 5));
+                mappables.Add(new Eagle()); points.Add(new(1, 1));
                 break;
 
             case Biome.Snowland:
-                // Œnieg: Pingwiny i Lodowe Wilki
-                mappables.Add(new Birds { Description = "Penguins", CanFly = false }); points.Add(new(4, 4));
-                mappables.Add(new Animals { Description = "IceWolf", Size = 15 }); points.Add(new(7, 0));
-                break;
-
-            default: // Domyœlnie Las
-                mappables.Add(new Animals { Description = "Rabbits" }); points.Add(new(5, 5));
+                mappables.Add(new Penguin()); points.Add(new(4, 4));
+                mappables.Add(new Penguin()); points.Add(new(4, 4));      
                 break;
         }
 
-        string moves = "dlrludluddlrulr"; // 15 rund
-
+        string moves = "dlrludluddlrulr";
         Simulation simulation = new(map, mappables, points, moves);
-
-        // log (symulacja wykona sie w tle cala od razu) i zapisujemy do statica
         _cachedLog = new SimulationLog(simulation);
 
         return _cachedLog;

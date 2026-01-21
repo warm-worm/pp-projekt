@@ -4,11 +4,13 @@ namespace Simulator;
 
 public class Animals : IMappable
 {
+    public int Health { get; set; } = 50;//domyślne hp zwierząt
+    public int Count { get; set; } = 1;//liczba domyślna zwierząt
     private string _description = "Unnamed";
     protected Map? _map; // protected, aby dziedziczace ptaki mialy dostep
     protected Point _position;
 
-    public required string Description
+    public string Description
     {
         get => _description;
         init => _description = Validator.Shortener(value, 3, 15, '#');
@@ -41,10 +43,13 @@ public class Animals : IMappable
         map.Add(this, startingPosition);
         _map = map;
         _position = startingPosition;
+
+
     }
 
     public override string ToString()
     {
         return $"{GetType().Name.ToUpper()}: {Info}";
     }
+
 }

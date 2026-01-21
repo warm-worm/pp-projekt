@@ -8,7 +8,7 @@ public class Orc : Creature
     public int Rage
     {
         get => _rage;
-        init => _rage = Validator.Limiter(value, 0, 10);
+        set => _rage = Validator.Limiter(value, 0, 20);
     }
 
     public Orc() : base() 

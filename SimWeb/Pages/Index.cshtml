@@ -16,6 +16,8 @@
         max-width: 1000px;
         margin-left: auto;
         margin-right: auto;
+        border-top: 6px solid #ccc;
+        transition: border-color 0.5s ease;
     }
 
     .control-form {
@@ -222,6 +224,67 @@
         .battle-log::-webkit-scrollbar-thumb:hover {
             background: #777;
         }
+
+    /* MOTYWY BIOMÓW --- */
+
+    /* Forest */
+    body.theme-Forest {
+        background-color: #e8f5e9;
+        background-image: linear-gradient(to bottom, #e8f5e9 0%, #c8e6c9 100%);
+    }
+
+        body.theme-Forest .control-panel {
+            border-top-color: #2e7d32;
+        }
+       
+        body.theme-Forest .map-cell {
+            background-color: #a5d6a7;
+            border-color: #81c784;
+        }
+
+        body.theme-Forest .map-container {
+            border-color: #1b5e20;
+        }
+
+
+    /* Mountains */
+    body.theme-Mountains {
+        background-color: #efebe9;
+        background-image: linear-gradient(to bottom, #efebe9 0%, #d7ccc8 100%);
+    }
+
+        body.theme-Mountains .control-panel {
+            border-top-color: #5d4037;
+        }
+        
+        body.theme-Mountains .map-cell {
+            background-color: #cfd8dc;
+            border-color: #b0bec5;
+        }
+
+        body.theme-Mountains .map-container {
+            border-color: #455a64;
+        }
+
+
+    /* Snowland */
+    body.theme-Snowland {
+        background-color: #e1f5fe;
+        background-image: linear-gradient(to bottom, #e1f5fe 0%, #b3e5fc 100%);
+    }
+
+        body.theme-Snowland .control-panel {
+            border-top-color: #0288d1;
+        }
+
+        body.theme-Snowland .map-cell {
+            background-color: #ffffff;
+            border-color: #e1f5fe;
+        }
+
+        body.theme-Snowland .map-container {
+            border-color: #0277bd;
+        }
 </style>
 
 <div class="control-panel">
@@ -285,7 +348,6 @@
                             {
                                 string imgSrc = "unknown.png";
 
-                                // Logic helper flags
                                 bool hasOrc = symbol.Contains('O');
                                 bool hasElf = symbol.Contains('E');
                                 bool hasRabbit = symbol.Contains('R');
@@ -296,7 +358,7 @@
 
                                 if (Model.IsCatMode)
                                 {
-                                    // === CAT MODE LOGIC ===
+                                    // === CAT MODE  ===
                                     if (symbol.Length > 3)
                                     {
                                         if (Model.CurrentBiomeName == "Forest") { imgSrc = "all4-forest.png"; }
@@ -349,7 +411,7 @@
                                 }
                                 else
                                 {
-                                    // === NORMAL MODE LOGIC ===
+                                    // === NORMAL MODE ===
                                     if (symbol.Length > 3)
                                     {
                                         if (Model.CurrentBiomeName == "Forest") { imgSrc = "all4-forest-normal.png"; }
@@ -479,3 +541,12 @@
         </div>
     </div>
 </div>
+<script>
+    var biome = "@Model.CurrentBiomeName";
+
+    document.body.classList.remove('theme-Forest', 'theme-Mountains', 'theme-Snowland');
+
+    if (biome) {
+        document.body.classList.add('theme-' + biome);
+    }
+</script>

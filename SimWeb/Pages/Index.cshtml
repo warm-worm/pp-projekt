@@ -5,143 +5,455 @@
     ViewData["Title"] = "SimWeb - Symulacja";
 }
 
-<div class="controls-settings" style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px;">
-    <form method="post" style="display: flex; justify-content: center; gap: 30px; align-items: center; flex-wrap: wrap;">
+<style>
+    .control-panel {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 15px 25px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-        <div style="text-align: center;">
-            <h4 style="margin: 0 0 10px 0; color: #333;">Wybierz Biom:</h4>
-            <div class="btn-group">
+    .control-form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .panel-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #888;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-left: 2px;
+    }
+
+    .vertical-divider {
+        width: 1px;
+        height: 40px;
+        background-color: #eee;
+    }
+
+    .btn-cat-toggle {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+        .btn-cat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+    .btn-group .btn {
+        padding: 8px 16px;
+        font-weight: 500;
+    }
+
+    /* --- 2. STYLE UKŁADU GRY (TWOJE POPRAWKI) --- */
+    .game-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+    /* Prawa kolumna - stała szerokość dla całości */
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 320px; /* Stała szerokość dla obu paneli */
+    }
+
+    /* Wspólny styl dla pudełek (statystyki i nawigacja) */
+    .sidebar, .nav-panel {
+        width: 100%; /* Wypełnij całą szerokość rodzica (320px) */
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px; /* Bardziej zaokrąglone rogi */
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Delikatny cień */
+        box-sizing: border-box; /* Ważne: padding nie powiększa szerokości */
+    }
+
+        .sidebar h4 {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+            color: #444;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+    .stats-item {
+        padding: 10px 5px;
+        border-bottom: 1px solid #f8f8f8;
+        font-size: 0.95rem;
+        display: flex;
+        justify-content: space-between; /* Rozstrzelenie tekstu */
+    }
+
+        .stats-item:last-child {
+            border-bottom: none;
+        }
+
+    /* --- STYLIZACJA PRZYCISKÓW NAWIGACJI --- */
+    .nav-form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-nav {
+        flex: 1; /* Przyciski zajmują równą przestrzeń */
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .btn-prev {
+        background-color: #f1f3f5;
+        color: #495057;
+        border: 1px solid #dee2e6;
+    }
+
+        .btn-prev:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+    .btn-next {
+        background-color: #0d6efd;
+        color: white;
+        box-shadow: 0 2px 5px rgba(13, 110, 253, 0.3);
+    }
+
+        .btn-next:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.4);
+        }
+
+    .turn-counter {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #555;
+        white-space: nowrap; /* Tekst nie będzie się łamał */
+        background-color: #f8f9fa;
+        padding: 5px 10px;
+        border-radius: 20px;
+        border: 1px solid #eee;
+    }
+
+    /* Battle Log */
+    .battle-log {
+        margin-top: 20px;
+        background-color: #2b2b2b;
+        color: #4ade80; /* Jaśniejsza zieleń */
+        font-family: 'Consolas', monospace;
+        padding: 15px;
+        border-radius: 8px;
+        height: 150px;
+        overflow-y: auto;
+        border: 1px solid #444;
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    .log-entry {
+        margin-bottom: 5px;
+        border-bottom: 1px solid #3a3a3a;
+        padding-bottom: 3px;
+    }
+
+    .log-entry:last-child {
+        border-bottom: none;
+    }
+</style>
+
+<div class="control-panel">
+    <form method="post" class="control-form">
+
+        <div class="control-group">
+            <span class="panel-label">Środowisko</span>
+            <div class="btn-group shadow-sm" role="group">
                 <button type="submit" name="map" value="Forest"
                         class="btn @(Model.CurrentBiomeName == "Forest" ? "btn-success" : "btn-outline-success")">
-                    🌳 Las (Rabbits)
+                    🌳 Las
                 </button>
                 <button type="submit" name="map" value="Mountains"
                         class="btn @(Model.CurrentBiomeName == "Mountains" ? "btn-secondary" : "btn-outline-secondary")">
-                    🏔️ Góry (Goats)
+                    🏔️ Góry
                 </button>
                 <button type="submit" name="map" value="Snowland"
                         class="btn @(Model.CurrentBiomeName == "Snowland" ? "btn-info" : "btn-outline-info")">
-                    ❄️ Śnieg (Penguins)
+                    ❄️ Śnieg
                 </button>
             </div>
         </div>
 
-        <div style="text-align: center;">
-            <h4 style="margin: 0 0 10px 0; color: #333;">Tryb:</h4>
-            <button type="submit" name="toggleCats" value="true" class="btn"
-                    style="background-color: @(Model.IsCatMode ? "#ffb6c1" : "#e0e0e0"); font-weight: bold;">
-                @(Model.IsCatMode ? "😻 WYŁĄCZ KOTY" : "😿 WŁĄCZ KOTY")
+        <div class="control-group" style="align-items: flex-end;">
+            <span class="panel-label">Tryb Gry</span>
+            <button type="submit" name="toggleCats" value="true" class="btn-cat-toggle"
+                    style="background-color: @(Model.IsCatMode ? "#ffb6c1" : "#e9ecef");
+                           color: @(Model.IsCatMode ? "#880e4f" : "#495057");">
+                @(Model.IsCatMode ? "😻 KOTY: ON" : "😿 KOTY: OFF")
             </button>
         </div>
 
     </form>
 </div>
 
-<div class="controls">
-    <form method="post">
-        <button type="submit" name="action" value="prev" class="btn">&larr; Poprzednia</button>
-        <span style="font-size: 1.2rem; font-weight: bold;">Tura @Model.TurnIndex / @Model.TotalTurns</span>
-        <button type="submit" name="action" value="next" class="btn">Następna &rarr;</button>
-    </form>
-</div>
+<div class="game-container">
 
-<div class="simulation-wrapper">
-    <div class="y-axis">
-        @for (int y = Model.SizeY - 1; y >= 0; y--)
-        {
-            <div class="y-axis-label">@y</div>
-        }
-    </div>
-
-    <div class="map-column">
-        <div class="map-container">
+    <div class="simulation-wrapper">
+        <div class="y-axis">
             @for (int y = Model.SizeY - 1; y >= 0; y--)
             {
-                @for (int x = 0; x < Model.SizeX; x++)
+                <div class="y-axis-label">@y</div>
+            }
+        </div>
+
+        <div class="map-column">
+            <div class="map-container">
+                @for (int y = Model.SizeY - 1; y >= 0; y--)
                 {
-                    var point = new Simulator.Point(x, y);
-                    string symbol = "";
-
-                    if (Model.CurrentTurn.Symbols.ContainsKey(point))
+                    @for (int x = 0; x < Model.SizeX; x++)
                     {
-                        symbol = Model.CurrentTurn.Symbols[point];
-                    }
-
-                    <div class="map-cell">
-                        @if (!string.IsNullOrEmpty(symbol))
+                        var point = new Simulator.Point(x, y);
+                        string symbol = "";
+                        if (Model.CurrentTurn.Symbols.ContainsKey(point))
                         {
-                            string imgSrc = "unknown.png";
+                            symbol = Model.CurrentTurn.Symbols[point];
+                        }
 
-                            if (Model.IsCatMode)
+                        <div class="map-cell">
+                            @if (!string.IsNullOrEmpty(symbol))
                             {
-                                // --- TRYB KOCI (IsCatMode = TRUE) ---
-                                // Tu mamy konkretne grafiki spotkań (widoczne na screenshocie)
-                                if (symbol.Length > 1)
+                                string imgSrc = "unknown.png";
+
+                                // Logic helper flags
+                                bool hasOrc = symbol.Contains('O');
+                                bool hasElf = symbol.Contains('E');
+                                bool hasRabbit = symbol.Contains('R');
+                                bool hasGoat = symbol.Contains('G');
+                                bool hasEagle = symbol.Contains('J');
+                                bool hasNightingale = symbol.Contains('N');
+                                bool hasPenguin = symbol.Contains('P');
+
+                                if (Model.IsCatMode)
                                 {
-                                    if (symbol.Length == 4)
+                                    // === CAT MODE LOGIC ===
+                                    if (symbol.Length > 3)
                                     {
-                                        imgSrc = "all4.png";
+                                        if (Model.CurrentBiomeName == "Forest") { imgSrc = "all4-forest.png"; }
+                                        else if (Model.CurrentBiomeName == "Mountains") { imgSrc = "all4-mountains.png"; }
+                                        else if (Model.CurrentBiomeName == "Snowland") { imgSrc = "all3-snow.png"; }
+                                        else { imgSrc = "all4.png"; }
                                     }
                                     else if (symbol.Length == 3)
                                     {
-                                        if (symbol.Contains('A') && symbol.Contains('E') && symbol.Contains('O')) imgSrc = "elf_orc_rabbit.png";
-                                        else if (symbol.Contains('B') && symbol.Contains('E') && symbol.Contains('O')) imgSrc = "elf_orc_bird.png";
-                                        else if (symbol.Contains('A') && symbol.Contains('B') && symbol.Contains('E')) imgSrc = "elf_rabbit_bird.png";
-                                        else if (symbol.Contains('A') && symbol.Contains('B') && symbol.Contains('O')) imgSrc = "orc_rabbit_bird.png";
-                                        else imgSrc = "all4.png"; // fallback dla 3
+                                        if (hasElf && hasOrc && hasRabbit) { imgSrc = "elf_orc_rabbit.png"; }
+                                        else if (hasElf && hasOrc && hasGoat) { imgSrc = "elf_orc_goat.png"; }
+                                        else if (hasElf && hasOrc && hasEagle) { imgSrc = "elf_orc_eagle.png"; }
+                                        else if (hasElf && hasOrc && hasNightingale) { imgSrc = "elf_orc_nightingale.png"; }
+                                        else if (hasElf && hasOrc && hasPenguin) { imgSrc = "elf_orc_penguin.png"; }
+                                        else if (hasOrc && hasGoat && hasEagle) { imgSrc = "orc_goat_eagle.png"; }
+                                        else if (hasOrc && hasRabbit && hasNightingale) { imgSrc = "orc_rabbit_nightingale.png"; }
+                                        else if (hasElf && hasGoat && hasEagle) { imgSrc = "elf_goat_eagle.png"; }
+                                        else if (hasElf && hasRabbit && hasNightingale) { imgSrc = "elf_rabbit_nightingale.png"; }
+                                        else { imgSrc = "all4.png"; }
                                     }
-                                    else // Pary (2 postacie)
+                                    else if (symbol.Length == 2)
                                     {
-                                        if (symbol.Contains('E') && symbol.Contains('O')) imgSrc = "elf_orc.png";
-                                        else if (symbol.Contains('A') && symbol.Contains('O')) imgSrc = "orc_rabbit.png";
-                                        else if (symbol.Contains('A') && symbol.Contains('E')) imgSrc = "elf_rabbit.png";
-                                        else if (symbol.Contains('B') && symbol.Contains('O')) imgSrc = "orc_bird.png";
-                                        else if (symbol.Contains('B') && symbol.Contains('E')) imgSrc = "elf_bird.png";
-                                        else if (symbol.Contains('A') && symbol.Contains('B')) imgSrc = "rabbit_bird.png";
-                                        else imgSrc = "all4.png"; // fallback
+                                        if (hasOrc && hasRabbit) { imgSrc = "orc_rabbit.png"; }
+                                        else if (hasOrc && hasGoat) { imgSrc = "orc_goat.png"; }
+                                        else if (hasOrc && hasEagle) { imgSrc = "orc_eagle.png"; }
+                                        else if (hasOrc && hasNightingale) { imgSrc = "orc_nightingale.png"; }
+                                        else if (hasOrc && hasPenguin) { imgSrc = "orc_penguin.png"; }
+                                        else if (hasOrc && hasElf) { imgSrc = "elf_orc.png"; }
+                                        else if (hasElf && hasRabbit) { imgSrc = "elf_rabbit.png"; }
+                                        else if (hasElf && hasGoat) { imgSrc = "elf_goat.png"; }
+                                        else if (hasElf && hasEagle) { imgSrc = "elf_eagle.png"; }
+                                        else if (hasElf && hasNightingale) { imgSrc = "elf_nightingale.png"; }
+                                        else if (hasElf && hasPenguin) { imgSrc = "elf_penguin.png"; }
+                                        else if (hasGoat && hasEagle) { imgSrc = "goat_eagle.png"; }
+                                        else if (hasRabbit && hasNightingale) { imgSrc = "rabbit_nightingale.png"; }
+                                        else { imgSrc = "all4.png"; }
+                                    }
+                                    else
+                                    {
+                                        char s = char.ToUpper(symbol[0]);
+                                        if (s == 'O') { imgSrc = "orc-cat.png"; }
+                                        else if (s == 'E') { imgSrc = "elf-cat.png"; }
+                                        else if (s == 'R') { imgSrc = "rabbit-cat.png"; }
+                                        else if (s == 'G') { imgSrc = "goat-cat.png"; }
+                                        else if (s == 'P') { imgSrc = "cat-penguin.png"; }
+                                        else if (s == 'N') { imgSrc = "nightingale-cat.png"; }
+                                        else if (s == 'J') { imgSrc = "eagle-cat.png"; }
+                                        else { imgSrc = "cat-face.png"; }
                                     }
                                 }
                                 else
                                 {
-                                    // Pojedynczy kot
-                                    char s = char.ToUpper(symbol[0]);
-                                    if (s == 'O') imgSrc = "orc-cat.png";
-                                    else if (s == 'E') imgSrc = "elf-cat.png";
-                                    else if (s == 'A') imgSrc = "rabbit-cat.png";
-                                    else if (s == 'B') imgSrc = "bird-cat.png";
+                                    // === NORMAL MODE LOGIC ===
+                                    if (symbol.Length > 3)
+                                    {
+                                        if (Model.CurrentBiomeName == "Forest") { imgSrc = "all4-forest-normal.png"; }
+                                        else if (Model.CurrentBiomeName == "Mountains") { imgSrc = "all4-mountains-normal.png"; }
+                                        else if (Model.CurrentBiomeName == "Snowland") { imgSrc = "all3-snow-normal.png"; }
+                                        else { imgSrc = "combo-80.png"; }
+                                    }
+                                    else if (symbol.Length == 3)
+                                    {
+                                        if (hasElf && hasOrc && hasRabbit) { imgSrc = "elf_orc_rabbit_normal.png"; }
+                                        else if (hasElf && hasOrc && hasGoat) { imgSrc = "elf_orc_goat_normal.png"; }
+                                        else if (hasElf && hasOrc && hasEagle) { imgSrc = "elf_orc_eagle_normal.png"; }
+                                        else if (hasElf && hasOrc && hasNightingale) { imgSrc = "elf_orc_nightingale_normal.png"; }
+                                        else if (hasElf && hasOrc && hasPenguin) { imgSrc = "elf_orc_penguin_normal.png"; }
+                                        else if (hasOrc && hasGoat && hasEagle) { imgSrc = "orc_goat_eagle_normal.png"; }
+                                        else if (hasOrc && hasRabbit && hasNightingale) { imgSrc = "orc_rabbit_nightingale_normal.png"; }
+                                        else if (hasElf && hasGoat && hasEagle) { imgSrc = "elf_goat_eagle_normal.png"; }
+                                        else if (hasElf && hasRabbit && hasNightingale) { imgSrc = "elf_rabbit_nightingale_normal.png"; }
+                                        else { imgSrc = "combo-80.png"; }
+                                    }
+                                    else if (symbol.Length == 2)
+                                    {
+                                        if (hasOrc && hasRabbit) { imgSrc = "orc_rabbit_normal.png"; }
+                                        else if (hasOrc && hasGoat) { imgSrc = "orc_goat_normal.png"; }
+                                        else if (hasOrc && hasEagle) { imgSrc = "orc_eagle_normal.png"; }
+                                        else if (hasOrc && hasNightingale) { imgSrc = "orc_nightingale_normal.png"; }
+                                        else if (hasOrc && hasPenguin) { imgSrc = "orc_penguin_normal.png"; }
+                                        else if (hasOrc && hasElf) { imgSrc = "elf_orc_normal.png"; }
+                                        else if (hasElf && hasRabbit) { imgSrc = "elf_rabbit_normal.png"; }
+                                        else if (hasElf && hasGoat) { imgSrc = "elf_goat_normal.png"; }
+                                        else if (hasElf && hasEagle) { imgSrc = "elf_eagle_normal.png"; }
+                                        else if (hasElf && hasNightingale) { imgSrc = "elf_nightingale_normal.png"; }
+                                        else if (hasElf && hasPenguin) { imgSrc = "elf_penguin_normal.png"; }
+                                        else if (hasGoat && hasEagle) { imgSrc = "goat_eagle_normal.png"; }
+                                        else if (hasRabbit && hasNightingale) { imgSrc = "nightingale_rabbit_normal.png"; }
+                                        else { imgSrc = "combo-80.png"; }
+                                    }
+                                    else
+                                    {
+                                        if (hasOrc) { imgSrc = "orc.png"; }
+                                        else if (hasElf) { imgSrc = "elf.png"; }
+                                        else if (hasRabbit) { imgSrc = "rabbit.png"; }
+                                        else if (hasGoat) { imgSrc = "goat.png"; }
+                                        else if (hasPenguin) { imgSrc = "penguin.png"; }
+                                        else if (hasNightingale) { imgSrc = "nightingale.png"; }
+                                        else if (hasEagle) { imgSrc = "eagle.png"; }
+                                    }
                                 }
+
+                                string tooltipText = "Postacie: " + symbol;
+                                <img src="~/images/@imgSrc" alt="@symbol" title="@tooltipText" />
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            <div class="x-axis">
+                @for (int x = 0; x < Model.SizeX; x++)
+                {
+                    <div class="x-axis-label">@x</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="right-column">
+
+        <div class="sidebar">
+            <h4>📊 Statystyki (Tura @Model.TurnIndex)</h4>
+
+            @if (Model.CurrentTurn.Stats != null && Model.CurrentTurn.Stats.Count > 0)
+            {
+                <div style="display:flex; flex-direction:column;">
+                    @foreach (var stat in Model.CurrentTurn.Stats)
+                    {
+                        <div class="stats-item">
+                            @if (stat.Contains("💀") || stat.Contains("MARTWY"))
+                            {
+                                <span style="color:#dc3545; font-weight:bold; width:100%;">@stat</span>
                             }
                             else
                             {
-                                // --- TRYB ZWYKŁY (IsCatMode = FALSE) ---
-                                // Tu nie mamy grafik spotkań -> combo-80.png
-                                if (symbol.Length > 1)
-                                {
-                                    imgSrc = "combo-80.png";
-                                }
-                                else
-                                {
-                                    // Pojedyncza zwykła postać
-                                    char s = char.ToUpper(symbol[0]);
-                                    if (s == 'O') imgSrc = "ork-80.png";
-                                    else if (s == 'E') imgSrc = "elf-80.png";
-                                    else if (s == 'A') imgSrc = "rabbit-80.png";
-                                    else if (s == 'B') imgSrc = "eagle-80.png";
-                                }
+                                <span style="width:100%;">@stat</span>
                             }
-
-                            <img src="~/images/@imgSrc" alt="@symbol" title="@symbol" />
-                        }
-                    </div>
-                }
+                        </div>
+                    }
+                </div>
             }
-        </div>
-
-        <div class="x-axis">
-            @for (int x = 0; x < Model.SizeX; x++)
+            else
             {
-                <div class="x-axis-label">@x</div>
+                <p style="text-align:center; color:#888; margin-top:10px;">Brak danych</p>
             }
         </div>
+
+        <div class="nav-panel">
+            <form method="post" class="nav-form">
+
+                <button type="submit" name="action" value="prev" class="btn-nav btn-prev" title="Poprzednia tura">
+                    ⬅ Wstecz
+                </button>
+
+                <div class="turn-counter">
+                    @Model.TurnIndex / @Model.TotalTurns
+                </div>
+
+                <button type="submit" name="action" value="next" class="btn-nav btn-next" title="Następna tura">
+                    Dalej ➡
+                </button>
+
+            </form>
+        </div>
+
     </div>
+</div>
+
+<div class="battle-log">
+    <h5 style="margin-top:0; border-bottom: 1px solid #555; padding-bottom:5px; color:#fff;">📜 Dziennik Zdarzeń</h5>
+    @if (Model.CurrentTurn.Events != null && Model.CurrentTurn.Events.Count > 0)
+    {
+        @foreach (var logEvent in Model.CurrentTurn.Events)
+        {
+            <div class="log-entry">> @logEvent</div>
+        }
+    }
+    else
+    {
+        <div class="log-entry" style="color:#777;">> Cisza na mapie...</div>
+    }
 </div>

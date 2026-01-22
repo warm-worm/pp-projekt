@@ -16,6 +16,7 @@ public enum Biome
 public static class WorldSettings
 {
     public static Biome CurrentBiome { get; set; } = Biome.Forest;
+    public static bool IsCatMode { get; set; } = false;
 
     // Metoda pomocnicza do pobierania modyfikatorów
     public static (int agilityMod, int rageMod) GetModifiers() => CurrentBiome switch

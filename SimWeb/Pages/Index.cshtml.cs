@@ -36,6 +36,7 @@ public class IndexModel : PageModel
 
         // --- ODCZYT USTAWIEÑ ---
         IsCatMode = (HttpContext.Session.GetInt32("IsCatMode") ?? 0) == 1;
+        WorldSettings.IsCatMode = IsCatMode;
         string biomeStr = HttpContext.Session.GetString("Biome") ?? "Forest";
         CurrentBiomeName = biomeStr;
 
@@ -80,8 +81,10 @@ public class IndexModel : PageModel
         if (toggleCats == "true")
         {
             bool isCat = (HttpContext.Session.GetInt32("IsCatMode") ?? 0) == 1;
-            // Zmieniamy na przeciwny (w³¹cz/wy³¹cz)
             HttpContext.Session.SetInt32("IsCatMode", !isCat ? 1 : 0);
+
+            // Aktualizujemy od razu
+            WorldSettings.IsCatMode = !isCat;
         }
 
         // 3. NAWIGACJA (NEXT/PREV)
@@ -110,6 +113,12 @@ public class IndexModel : PageModel
     }
 
     // metoda pomocnicza tworzaca konkretna symulacje
+    // W pliku Index.cshtml.cs
+
+    // W Index.cshtml.cs
+
+    // Podmieñ tê metodê w pliku Index.cshtml.cs
+
     private SimulationLog GetSimulationLog()
     {
         if (_cachedLog != null) return _cachedLog;
@@ -118,30 +127,50 @@ public class IndexModel : PageModel
         List<IMappable> mappables = new();
         List<Point> points = new();
 
-        // 1. Bohaterowie
-        mappables.Add(new Orc("Gorbag", 1, 5)); points.Add(new(2, 2));
-        mappables.Add(new Elf("Elandor", 1, 5)); points.Add(new(3, 1));
+        // CENTRUM WYDARZEÑ TO PUNKT (3,3)
+        // Ustawiamy postacie bardzo blisko, ¿eby od razu by³a akcja.
 
-        // 2. Zwierzêta - logika zgodna z Twoimi nowymi klasami
+        // 1. ORK (Startuje na 2,3 - krok od centrum)
+        mappables.Add(new Orc("Gorbag", 1, 5));
+        points.Add(new(2, 3));
+
+        // 2. ELF (Startuje na 4,3 - krok od centrum)
+        mappables.Add(new Elf("Legolas", 1, 5));
+        points.Add(new(4, 3));
+
+        // 3. ZWIERZÊTA (Startuj¹ góra/dó³ od centrum)
         switch (WorldSettings.CurrentBiome)
         {
             case Biome.Forest:
-                mappables.Add(new Rabbit()); points.Add(new(5, 5));
-                mappables.Add(new Nightingale()); points.Add(new(7, 3));
+                mappables.Add(new Rabbit()); points.Add(new(3, 2)); // Królik
+                mappables.Add(new Nightingale()); points.Add(new(3, 4)); // S³owik
                 break;
-
             case Biome.Mountains:
-                mappables.Add(new Goat()); points.Add(new(6, 5));
-                mappables.Add(new Eagle()); points.Add(new(1, 1));
+                mappables.Add(new Goat()); points.Add(new(3, 2)); // Koza
+                mappables.Add(new Eagle()); points.Add(new(3, 4)); // Orze³
                 break;
-
             case Biome.Snowland:
-                mappables.Add(new Penguin()); points.Add(new(4, 4));
-                mappables.Add(new Penguin()); points.Add(new(4, 4));      
+                mappables.Add(new Penguin()); points.Add(new(3, 2));
+                mappables.Add(new Penguin()); points.Add(new(3, 4));
                 break;
         }
 
-        string moves = "dlrludluddlrulr";
+        // --- CHOREOGRAFIA RUCHÓW (TANIEC) ---
+        // Sekwencja: r (Ork), l (Elf), u (Zwierzê1), d (Zwierzê2)
+
+        // Tura 1 "DO ŒRODKA": rlud -> Wszyscy wchodz¹ na (3,3). Ork atakuje!
+        // Tura 2 "NA ZEWN¥TRZ": lrdu -> Wszyscy wracaj¹ na start.
+        // Powtarzamy to 5 razy.
+
+        string approach = "rlud"; // Wszyscy id¹ do (3,3)
+        string retreat = "lrdu"; // Wszyscy wracaj¹ na swoje miejsca
+
+        string moves = "";
+        for (int i = 0; i < 5; i++)
+        {
+            moves += approach + retreat;
+        }
+
         Simulation simulation = new(map, mappables, points, moves);
         _cachedLog = new SimulationLog(simulation);
 

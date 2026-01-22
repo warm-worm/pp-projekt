@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <h1 class="display-4" style="color: #221c4e; font-weight: bold;">Zasady Symulacji</h1>
-    <p>Dowiedz się, jak przetrwać w świecie SimWeb.</p>
+    <p>Poznaj mieszkańców i mechanikę świata SimWeb.</p>
 </div>
 
 <hr />
@@ -18,56 +18,62 @@
             <h2 style="color: #7c1b0d; text-align: center; margin-bottom: 20px;">1. Legenda Mapy</h2>
 
             <table class="table table-bordered table-striped" style="background-color: white; margin: 0 auto; max-width: 90%;">
-                <thead>
-                    <tr style="background-color: #f1f3fe;">
+                <thead style="background-color: #f1f3fe;">
+                    <tr>
                         <th style="width: 20%; text-align: center; vertical-align: middle;">Symbol</th>
                         <th style="width: 30%; text-align: center; vertical-align: middle;">Postać (Normal / Koty)</th>
-                        <th style="width: 50%; text-align: center; vertical-align: middle;">Opis</th>
+                        <th style="width: 50%; text-align: center; vertical-align: middle;">Opis i Zachowanie</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td style="text-align:center; vertical-align: middle;">
-                            <img src="~/images/ork-80.png" width="50" alt="Orc" /> /
+                            <img src="~/images/orc.png" width="50" alt="Orc" /> /
                             <img src="~/images/orc-cat.png" width="50" alt="Cat Orc" />
                         </td>
                         <td style="text-align:center; vertical-align: middle;"><strong>Ork / Kot-Ork</strong></td>
-                        <td style="vertical-align: middle;">Poluje na zwierzęta (Hunt). Walczy z Elfami.</td>
+                        <td style="vertical-align: middle;">
+                            Poluje na zwierzęta stadne (Króliki, Kozy).<br>
+                            Zjada jedną sztukę ze stada, by odzyskać zdrowie.<br>
+                            Walczy z Elfami.
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align:center; vertical-align: middle;">
-                            <img src="~/images/elf-80.png" width="50" alt="Elf" /> /
+                            <img src="~/images/elf.png" width="50" alt="Elf" /> /
                             <img src="~/images/elf-cat.png" width="50" alt="Cat Elf" />
                         </td>
                         <td style="text-align:center; vertical-align: middle;"><strong>Elf / Kot-Elf</strong></td>
-                        <td style="vertical-align: middle;">Śpiewa ptakom (Sing). Walczy z Orkami.</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center; vertical-align: middle;">
-                            <img src="~/images/rabbit-80.png" width="50" alt="Animal" /> /
-                            <img src="~/images/rabbit-cat.png" width="50" alt="Cat in rabbit suit" />
-                        </td>
-                        <td style="text-align:center; vertical-align: middle;"><strong>Zwierzęta / Kot w stroju królika</strong></td>
                         <td style="vertical-align: middle;">
-                            W trybie normalnym: Króliki, Kozy lub Wilki.<br />
-                            W trybie kotów: <strong>Kot przebrany za królika</strong> (cel polowań).
+                            Śpiewa z ptakami (Orły, Słowiki, Pingwiny), zyskując bonusy.<br>
+                            Walczy z Orkami (w lesie atakuje podwójnie).
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align:center; vertical-align: middle;">
-                            <img src="~/images/eagle-80.png" width="50" alt="Bird" /> /
-                            <img src="~/images/bird-cat.png" width="50" alt="Fish" />
+                            <img src="~/images/rabbit.png" width="40" alt="Rabbit" />
+                            <img src="~/images/goat.png" width="40" alt="Goat" /> /<br>
+                            <img src="~/images/rabbit-cat.png" width="40" alt="Cat Rabbit" />
+                            <img src="~/images/goat-cat.png" width="40" alt="Cat Goat" />
+                        </td>
+                        <td style="text-align:center; vertical-align: middle;"><strong>Zwierzęta Stadne</strong></td>
+                        <td style="vertical-align: middle;">
+                            <strong>Króliki</strong> (Las) i <strong>Kozy</strong> (Góry).<br>
+                            Są pokarmem dla Orków. Przemieszczają się w stadach.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; vertical-align: middle;">
+                            <img src="~/images/nightingale.png" width="40" alt="Bird" />
+                            <img src="~/images/penguin.png" width="40" alt="Penguin" /> /<br>
+                            <img src="~/images/nightingale-cat.png" width="40" alt="Cat Bird" />
+                            <img src="~/images/cat-penguin.png" width="40" alt="Cat Penguin" />
                         </td>
                         <td style="text-align:center; vertical-align: middle;"><strong>Ptaki</strong></td>
-                        <td style="vertical-align: middle;">Orły, Strusie lub Pingwiny (w trybie kotów: Kotoptak).</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center; vertical-align: middle;">
-                            <img src="~/images/combo-80.png" width="50" alt="Fight" /> /
-                            <img src="~/images/all4.png" width="50" alt="Cat Fight" />
+                        <td style="vertical-align: middle;">
+                            <strong>Słowiki</strong> (Las), <strong>Orły</strong> (Góry), <strong>Pingwiny</strong> (Śnieg).<br>
+                            Wchodzą w interakcję z Elfami. Po śpiewie odlatują (z wyjątkiem Pingwinów).
                         </td>
-                        <td style="text-align:center; vertical-align: middle;"><strong>Walka</strong></td>
-                        <td style="vertical-align: middle;">Oznacza pole, na którym spotkały się dwie postacie.</td>
                     </tr>
                 </tbody>
             </table>
@@ -77,7 +83,7 @@
     <div class="row" style="margin-top: 40px;">
         <div class="col-md-12 text-center">
             <h2 style="color: #2e8b57; margin-bottom: 20px;">2. Wpływ Terenu (Biomy)</h2>
-            <p style="margin-bottom: 30px;">Wybór mapy drastycznie zmienia zasady gry:</p>
+            <p style="margin-bottom: 30px;">Każda mapa ma unikalne zasady i mieszkańców:</p>
         </div>
 
         <div class="col-md-12">
@@ -86,9 +92,9 @@
                 <div style="flex: 1; min-width: 250px; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #e8f5e9; text-align: left;">
                     <h4 style="color: #2e7d32; text-align: center;">🌳 Las (Forest)</h4>
                     <ul>
-                        <li><strong>Mieszkańcy:</strong> Króliki, Orły, Strusie.</li>
-                        <li><strong>Elf:</strong> +1 Agility, atakuje 2 razy!</li>
-                        <li><strong>Ork:</strong> -1 Rage (gubi się).</li>
+                        <li><strong>Mieszkańcy:</strong> Króliki, Słowiki.</li>
+                        <li><strong>Elf:</strong> +1 Agility, wykonuje <strong>podwójny atak</strong>.</li>
+                        <li><strong>Ork:</strong> -1 Rage (gubi się w gęstwinie).</li>
                     </ul>
                 </div>
 
@@ -96,17 +102,18 @@
                     <h4 style="color: #616161; text-align: center;">🏔️ Góry (Mountains)</h4>
                     <ul>
                         <li><strong>Mieszkańcy:</strong> Kozy Górskie, Orły.</li>
-                        <li><strong>Ork:</strong> +1 Rage (siła gór).</li>
-                        <li><strong>Elf:</strong> -1 Agility (ciężko się wspinać).</li>
+                        <li><strong>Ork:</strong> +1 Rage (siła gór), +10 HP za zjedzenie Kozy.</li>
+                        <li><strong>Elf:</strong> -1 Agility (trudny teren).</li>
                     </ul>
                 </div>
 
                 <div style="flex: 1; min-width: 250px; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #e1f5fe; text-align: left;">
                     <h4 style="color: #0277bd; text-align: center;">❄️ Śnieg (Snowland)</h4>
                     <ul>
-                        <li><strong>Mieszkańcy:</strong> Pingwiny, Lodowe Wilki.</li>
+                        <li><strong>Mieszkańcy:</strong> Pingwiny (Nieloty).</li>
                         <li><strong>Zimno:</strong> Wszyscy -1 do statystyk.</li>
-                        <li><strong>Pokój:</strong> Postacie <strong>nie walczą</strong> ze sobą!</li>
+                        <li><strong>Pokój:</strong> Postacie <strong>nie walczą</strong> ze sobą (wymieniają uprzejmości).</li>
+                        <li><strong>Pingwiny:</strong> Nie znikają po interakcji z Elfem!</li>
                     </ul>
                 </div>
 
@@ -119,11 +126,13 @@
             <h2 class="text-center" style="color: #d63384; margin-bottom: 20px;">3. Tryb Kociego Królestwa 😻</h2>
             <div style="background-color: #fff0f5; padding: 20px; border-radius: 8px; border: 2px dashed #ffb6c1; text-align: center;">
                 <p style="font-size: 1.1rem;">
-                    Specjalny tryb graficzny dostępny po kliknięciu przycisku "Włącz KOTY". <br />
-                    W tym trybie wszystkie postacie zamieniają się w koty,
-                    a zwierzęta stają się <strong>kotami w strojach królików</strong> (dlaczego? nikt nie wie). <br />
-                    <strong>Mechanika gry pozostaje bez zmian.</strong>
+                    Specjalny tryb wizualny dostępny w panelu sterowania. <br />
+                    Wszystkie postacie zamieniają się w swoje kocie odpowiedniki (nawet Orły mają kocie uszy!).<br />
+                    Opisy zdarzeń w Dzienniku również zmieniają się na bardziej... miauczące.
                 </p>
+                <div style="margin-top:10px;">
+                    <img src="~/images/all4.png" height="60" alt="Cats Group" title="Przykładowa grupa kotów" />
+                </div>
             </div>
         </div>
     </div>

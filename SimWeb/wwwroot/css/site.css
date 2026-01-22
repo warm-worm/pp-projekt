@@ -1,24 +1,30 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f1f3fe;
+    /* Zmiana: Zamiast zimnego niebieskiego, ciep³y kremowy (jak mapa/pergamin) */
+    background-color: #fdfbf7;
+    color: #2c3e50; /* Ciemny grafit dla czytelnoœci */
     margin: 0;
 }
 
 header {
+    /* Zmiana: G³êboki granat (zachowany Twój kolor, bo jest super) */
     background-color: #221c4e;
-    color: #ebe7b1;
+    color: #ebe7b1; /* Jasny be¿/z³oto */
     padding: 1rem;
     margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Dodano delikatny cieñ pod nag³ówkiem */
 }
 
 h1 {
     font-size: 1.5rem;
+    font-weight: 700;
 }
 
 h3 {
     color: #221c4e;
 }
 
+/* --- NAWIGACJA (Uk³ad bez zmian) --- */
 .navbar {
     display: flex;
     justify-content: flex-start;
@@ -30,28 +36,39 @@ h3 {
     gap: 30px;
 }
 
-.navbar b {
-    font-size: 2rem;
-}
+    .navbar b {
+        font-size: 2rem;
+        color: #ffd700; /* Z³oty kolor dla nazwy SimWeb */
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
 
-.navbar nav a {
-    color: aquamarine;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+    .navbar nav a {
+        /* Zmiana: Z aquamarine na jasne z³oto/be¿ - czytelniejsze na granacie */
+        color: #ebe7b1;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+    }
 
-.navbar nav a.active {
-    color: #ffffff;
-}
+        .navbar nav a:hover {
+            color: #ffffff; /* Bia³y po najechaniu */
+        }
+
+        .navbar nav a.active {
+            color: #ffd700; /* Z³oty dla aktywnej strony */
+            border-bottom: 2px solid #ffd700;
+        }
 
 main {
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
+    padding-bottom: 60px;
 }
 
+/* --- KONTROLKI (Uk³ad bez zmian) --- */
 .controls {
     display: flex;
     justify-content: center;
@@ -63,15 +80,24 @@ main {
 .btn {
     padding: 10px 20px;
     font-size: 1.2rem;
-    background-color: #efefef;
-    border: 1px solid #767676;
-    border-radius: 2px;
+    /* Zmiana: Nowoczeœniejszy, ale prosty przycisk */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Lekkie zaokr¹glenie */
     cursor: pointer;
     text-decoration: none;
-    color: black;
+    color: #333;
     min-width: 50px;
+    transition: all 0.2s ease;
 }
 
+    .btn:hover {
+        background-color: #e9ecef;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+/* --- MAPA (Uk³ad bez zmian - Grid 80px) --- */
 .simulation-wrapper {
     display: inline-flex;
     flex-direction: row;
@@ -91,11 +117,8 @@ main {
     align-items: center;
     justify-content: flex-end;
     font-size: 0.9rem;
-    color: #333;
-}
-
-.btn:hover {
-    background-color: #d0d0d0;
+    color: #555;
+    font-weight: bold;
 }
 
 .map-column {
@@ -107,27 +130,31 @@ main {
     display: grid;
     grid-template-columns: repeat(8, 80px);
     grid-template-rows: repeat(6, 80px);
-    border-top: 1px dashed black;
-    border-left: 1px dashed black;
+    border: 2px solid #444;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .map-cell {
     width: 80px;
     height: 80px;
-    background-color: lightgreen;
+    /* Zmiana: T³o mapy lekko jaœniejsze, ¿eby obrazki by³y wyraŸne */
+    background-color: #a5d6a7; /* Odcieñ zieleni (Las) - to nadpisze siê w logice C# jeœli u¿ywasz innego t³a */
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    border-right: 1px dashed black;
-    border-bottom: 1px dashed black;
+    /* Zmiana: Kropkowane linie wygl¹daj¹ l¿ej */
+    border-right: 1px dashed rgba(0,0,0,0.3);
+    border-bottom: 1px dashed rgba(0,0,0,0.3);
     box-sizing: border-box;
 }
 
-.map-cell img {
-    max-width: 80px;
-    max-height: 80px;
-}
+    .map-cell img {
+        max-width: 80px;
+        max-height: 80px;
+        /* Dodano: cieñ pod postaciami ¿eby "sta³y" na mapie */
+        filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+    }
 
 .x-axis {
     display: grid;
@@ -138,12 +165,13 @@ main {
 .x-axis-label {
     text-align: center;
     font-size: 0.9rem;
-    color: black;
+    color: #555;
+    font-weight: bold;
 }
 
 .info-box {
     margin-top: 20px;
     font-size: 1.2rem;
-    color: #7c1b0d;
+    color: #221c4e;
     font-weight: bold;
 }

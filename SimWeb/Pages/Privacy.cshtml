@@ -1,17 +1,125 @@
 ﻿@page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Informacje";
+    ViewData["Title"] = "Strona Główna";
 }
 
-<div class="text-center">
-    <h1>Aplikacja demonstracyjna Sim Web</h1>
+<style>
+    /* Style lokalne tylko dla strony tytułowej */
+    .hero-container {
+        margin-top: 50px;
+        padding: 40px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border: 1px solid #eee;
+        display: inline-block;
+        max-width: 800px;
+    }
 
-    <p>Wizualizacja symulacji z wykorzystaniem programowania obiektowego w C# i Razor Pages.</p>
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 800;
+        color: #221c4e;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+    }
 
-    <p>Mapa typu torus.</p>
+    .hero-subtitle {
+        font-size: 1.5rem;
+        color: #666;
+        margin-bottom: 40px;
+    }
 
-    <p>Sekwencja ruchów: <b>dlrludluddlrulr</b></p> <div style="margin-top: 40px;">
-        <img src="~/images/orc-big.png" alt="Big Orc" style="max-width: 400px; height: auto;" />
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero {
+        padding: 15px 40px;
+        font-size: 1.3rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: none;
+    }
+
+    .btn-start {
+        background: linear-gradient(135deg, #221c4e 0%, #4a3b89 100%);
+        color: #ffd700; /* Złoty tekst */
+        box-shadow: 0 4px 15px rgba(34, 28, 78, 0.3);
+    }
+
+        .btn-start:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(34, 28, 78, 0.4);
+            color: #fff;
+        }
+
+    .btn-rules {
+        background-color: #fff;
+        color: #221c4e;
+        border: 2px solid #221c4e;
+    }
+
+        .btn-rules:hover {
+            background-color: #f0f0f5;
+            transform: translateY(-3px);
+        }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-top: 60px;
+        text-align: center;
+    }
+
+    .feature-item h4 {
+        color: #221c4e;
+        margin-bottom: 10px;
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+</style>
+
+<div class="hero-container">
+
+    <div class="hero-title">SIM<span style="color: #ffd700;">WEB</span></div>
+    <p class="hero-subtitle">Symulator ekosystemu w świecie fantasy.</p>
+
+    <div class="action-buttons">
+        <a href="/Index" class="btn-hero btn-start">⚔️ Rozpocznij Symulację</a>
+        <a href="/Rules" class="btn-hero btn-rules">📜 Przeczytaj Zasady</a>
     </div>
+
+    <hr style="margin: 50px 0; border-color: #eee;">
+
+    <div class="features-grid">
+        <div class="feature-item">
+            <span class="feature-icon">🦁</span>
+            <h4>Różne Biomy</h4>
+            <p>Las, Góry i Śnieżne Pustkowia zmieniają zasady gry.</p>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">⚔️</span>
+            <h4>Epickie Starcia</h4>
+            <p>Orkowie kontra Elfy. Kto przejmie kontrolę nad mapą?</p>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">😻</span>
+            <h4>Tryb Kota</h4>
+            <p>Unikalny tryb graficzny dla miłośników futrzaków.</p>
+        </div>
+    </div>
+
 </div>

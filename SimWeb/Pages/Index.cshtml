@@ -69,32 +69,36 @@
         font-weight: 500;
     }
 
-    /* --- 2. STYLE UKŁADU GRY (TWOJE POPRAWKI) --- */
     .game-container {
         display: flex;
         justify-content: center;
         gap: 30px;
         align-items: flex-start;
         margin-top: 20px;
+        margin-bottom: 40px;
     }
 
-    /* Prawa kolumna - stała szerokość dla całości */
     .right-column {
         display: flex;
         flex-direction: column;
         gap: 20px;
-        width: 320px; /* Stała szerokość dla obu paneli */
+        width: 320px;
     }
 
-    /* Wspólny styl dla pudełek (statystyki i nawigacja) */
     .sidebar, .nav-panel {
-        width: 100%; /* Wypełnij całą szerokość rodzica (320px) */
+        width: 100%;
         background-color: #fff;
         border: 1px solid #ddd;
-        border-radius: 12px; /* Bardziej zaokrąglone rogi */
+        border-radius: 12px;
         padding: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Delikatny cień */
-        box-sizing: border-box; /* Ważne: padding nie powiększa szerokości */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        box-sizing: border-box;
+    }
+
+    .sidebar {
+        min-height: 230px;
+        display: flex;
+        flex-direction: column;
     }
 
         .sidebar h4 {
@@ -112,14 +116,13 @@
         border-bottom: 1px solid #f8f8f8;
         font-size: 0.95rem;
         display: flex;
-        justify-content: space-between; /* Rozstrzelenie tekstu */
+        justify-content: space-between;
     }
 
         .stats-item:last-child {
             border-bottom: none;
         }
 
-    /* --- STYLIZACJA PRZYCISKÓW NAWIGACJI --- */
     .nav-form {
         display: flex;
         justify-content: space-between;
@@ -128,7 +131,7 @@
     }
 
     .btn-nav {
-        flex: 1; /* Przyciski zajmują równą przestrzeń */
+        flex: 1;
         padding: 8px 10px;
         border-radius: 8px;
         font-weight: 600;
@@ -169,7 +172,7 @@
         font-size: 0.9rem;
         font-weight: bold;
         color: #555;
-        white-space: nowrap; /* Tekst nie będzie się łamał */
+        white-space: nowrap;
         background-color: #f8f9fa;
         padding: 5px 10px;
         border-radius: 20px;
@@ -178,17 +181,19 @@
 
     /* Battle Log */
     .battle-log {
-        margin-top: 20px;
         background-color: #2b2b2b;
-        color: #4ade80; /* Jaśniejsza zieleń */
+        color: #4ade80;
         font-family: 'Consolas', monospace;
         padding: 15px;
-        border-radius: 8px;
+        border-radius: 12px;
+        border: 1px solid #444;
+        width: 100%;
+        box-sizing: border-box;
         height: 150px;
         overflow-y: auto;
-        border: 1px solid #444;
         font-size: 0.85rem;
         line-height: 1.4;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .log-entry {
@@ -197,9 +202,26 @@
         padding-bottom: 3px;
     }
 
-    .log-entry:last-child {
-        border-bottom: none;
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+    .battle-log::-webkit-scrollbar {
+        width: 8px;
     }
+
+    .battle-log::-webkit-scrollbar-track {
+        background: #222;
+    }
+
+    .battle-log::-webkit-scrollbar-thumb {
+        background: #555;
+        border-radius: 4px;
+    }
+
+        .battle-log::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
 </style>
 
 <div class="control-panel">
@@ -223,7 +245,7 @@
             </div>
         </div>
 
-        <div class="control-group" style="align-items: flex-end;">
+        <div class="control-group" style="align-items: center;">
             <span class="panel-label">Tryb Gry</span>
             <button type="submit" name="toggleCats" value="true" class="btn-cat-toggle"
                     style="background-color: @(Model.IsCatMode ? "#ffb6c1" : "#e9ecef");
@@ -439,21 +461,21 @@
 
             </form>
         </div>
-
+        <div class="battle-log">
+            <div style="border-bottom: 1px solid #555; padding-bottom:5px; margin-bottom:10px; color:#fff; font-weight:bold;">
+                📜 Dziennik Zdarzeń
+            </div>
+            @if (Model.CurrentTurn.Events != null && Model.CurrentTurn.Events.Count > 0)
+            {
+                @foreach (var logEvent in Model.CurrentTurn.Events)
+                {
+                    <div class="log-entry">> @logEvent</div>
+                }
+            }
+            else
+            {
+                <div class="log-entry" style="color:#777;">> Cisza na mapie...</div>
+            }
+        </div>
     </div>
-</div>
-
-<div class="battle-log">
-    <h5 style="margin-top:0; border-bottom: 1px solid #555; padding-bottom:5px; color:#fff;">📜 Dziennik Zdarzeń</h5>
-    @if (Model.CurrentTurn.Events != null && Model.CurrentTurn.Events.Count > 0)
-    {
-        @foreach (var logEvent in Model.CurrentTurn.Events)
-        {
-            <div class="log-entry">> @logEvent</div>
-        }
-    }
-    else
-    {
-        <div class="log-entry" style="color:#777;">> Cisza na mapie...</div>
-    }
 </div>

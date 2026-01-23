@@ -37,8 +37,10 @@ public class IndexModel : PageModel
         // --- ODCZYT USTAWIEÑ ---
         IsCatMode = (HttpContext.Session.GetInt32("IsCatMode") ?? 0) == 1;
         WorldSettings.IsCatMode = IsCatMode;
+
         string biomeStr = HttpContext.Session.GetString("Biome") ?? "Forest";
         CurrentBiomeName = biomeStr;
+        //_cachedLog = null; <- - odkomentowaæ do testów zmiany biomu za ka¿dym razem
 
         if (Enum.TryParse(biomeStr, out Biome biomeEnum))
         {
@@ -59,7 +61,7 @@ public class IndexModel : PageModel
         SizeY = simulationLog.SizeY;
     }
 
-    // obsluga przyciskow (next / prev / zmiany mapy / koty)
+    // obsluga przyciskow (next / prev / zmiany mapy / koty <3)
     public IActionResult OnPost(string action, string map, string toggleCats)
     {
         // 1. ZMIANA MAPY (BIOMU)
@@ -68,7 +70,7 @@ public class IndexModel : PageModel
             HttpContext.Session.SetString("Biome", map);
             // Resetujemy cache, ¿eby przy prze³adowaniu stworzy³a siê nowa mapa z nowymi zwierzêtami!
             _cachedLog = null;
-            HttpContext.Session.SetInt32("TurnIndex", 0); // Wracamy na start
+            // HttpContext.Session.SetInt32("TurnIndex", 0); // Wracamy na start (to zakomendowane, ¿eby mo¿na by³o zmieniaæ biomy w trakcie rozgrywki)
 
             // Aktualizujemy WorldSettings od razu
             if (Enum.TryParse(map, out Biome biomeEnum))
@@ -111,13 +113,6 @@ public class IndexModel : PageModel
         // przeladowujemy strone (wzorzec PRG - Post Redirect Get)
         return RedirectToPage();
     }
-
-    // metoda pomocnicza tworzaca konkretna symulacje
-    // W pliku Index.cshtml.cs
-
-    // W Index.cshtml.cs
-
-    // Podmieñ tê metodê w pliku Index.cshtml.cs
 
     private SimulationLog GetSimulationLog()
     {

@@ -214,7 +214,7 @@ internal class Program
         Console.WriteLine($"Po 1 ataku: Rage={orc.Rage}, Kozy={goats.Count}");
 
         // Wybijamy resztę
-        map.Move(orc, p2, p2); // Ruch w miejscu wyzwala pętlę w Move
+        map.Move(orc, p2, p2); 
         map.Move(orc, p2, p2);
         map.Move(orc, p2, p2);
 

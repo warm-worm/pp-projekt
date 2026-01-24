@@ -15,43 +15,40 @@ internal class LogVisualizer
 
     public void Draw(int turnIndex)
     {
-        // sprawdzamy czy tura miesci sie w zakresie
         if (turnIndex < 0 || turnIndex >= Log.TurnLogs.Count)
         {
             Console.WriteLine($"Turn {turnIndex} is out of range.");
             return;
         }
 
-        var turn = Log.TurnLogs[turnIndex]; // pobieramy log dla danej tury
+        var turn = Log.TurnLogs[turnIndex];
 
-        // naglowek tury (kto sie ruszyl i gdzie)
-        Console.WriteLine($"Turn {turnIndex}: {turn.Mappable} goes {turn.Move}");
+        Console.WriteLine($"\n--- TURN {turnIndex} ---");
+        Console.WriteLine($"Action: {turn.Mappable} goes {turn.Move}");
 
-        // rysowanie mapy - gora ramki
+        // Rysowanie mapy
         Console.Write(Box.TopLeft);
         for (int x = 0; x < Log.SizeX - 1; x++) Console.Write($"{Box.Horizontal}{Box.TopMid}");
         Console.WriteLine($"{Box.Horizontal}{Box.TopRight}");
 
-        // srodek
         for (int y = Log.SizeY - 1; y >= 0; y--)
         {
             Console.Write(Box.Vertical);
             for (int x = 0; x < Log.SizeX; x++)
             {
                 var p = new Point(x, y);
-                char symbol = ' ';
+                string symbol = " ";
 
-                // sprawdzamy czy w slowniku symboli dla tej tury jest ten punkt
-                if (turn.Symbols.ContainsKey(p))
+                if (turn.Symbols.TryGetValue(p, out string? mapSymbols))
                 {
-                    symbol = turn.Symbols[p]; // pobieramy symbol
+                    // Jeśli jest więcej niż jeden symbol, bierzemy pierwszy (np. z "EO" bierzemy 'E')
+                    symbol = mapSymbols.Length > 1 ? mapSymbols[0].ToString() : mapSymbols;
                 }
 
                 Console.Write($"{symbol}{Box.Vertical}");
             }
             Console.WriteLine();
 
-            // linia oddzielajaca
             if (y > 0)
             {
                 Console.Write(Box.MidLeft);
@@ -60,9 +57,15 @@ internal class LogVisualizer
             }
         }
 
-        // dol ramki
         Console.Write(Box.BottomLeft);
         for (int x = 0; x < Log.SizeX - 1; x++) Console.Write($"{Box.Horizontal}{Box.BottomMid}");
         Console.WriteLine($"{Box.Horizontal}{Box.BottomRight}");
+
+        // WYŚWIETLANIE DODATKOWYCH INFORMACJI
+        Console.WriteLine("Events:");
+        foreach (var e in turn.Events) Console.WriteLine($" - {e}");
+
+        Console.WriteLine("Stats:");
+        Console.WriteLine(string.Join(" | ", turn.Stats));
     }
 }

@@ -76,7 +76,7 @@ internal class Program
         SimulationLog log = new(simulation);
         LogVisualizer logVisualizer = new(log);
 
-        // wyswietlamy tylko wybrane tury zgodnie z zadaniem
+        
         Console.WriteLine("\n--- HISTORY VIEWER ---");
 
         logVisualizer.Draw(5);

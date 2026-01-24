@@ -29,7 +29,7 @@ public class MapVisualizer
             Console.Write(Box.Vertical);
             for (int x = 0; x < _map.SizeX; x++)
             {
-                // ZMIANA: teraz to lista IMappable, wiec zmienna mappables
+                // to lista IMappable, wiec zmienna mappables
                 var mappables = _map.At(x, y);
                 char symbol = ' '; // puste pole
 

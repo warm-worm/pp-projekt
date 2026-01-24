@@ -11,7 +11,7 @@ public class Rectangle
             throw new ArgumentException("Rectangle cannot be thin.");
         }
 
-        // swap if needed - porzadkujemy wspolrzedne (mniejsze do X1/Y1, wieksze do X2/Y2)
+        // porzadkujemy wspolrzedne (mniejsze do X1/Y1, wieksze do X2/Y2)
         if (x1 > x2) { (x1, x2) = (x2, x1); }
         if (y1 > y2) { (y1, y2) = (y2, y1); }
 

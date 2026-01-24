@@ -2,7 +2,6 @@
 
 namespace Simulator;
 
-// dodajemy implementacje interfejsu
 public abstract class Creature : IMappable
 {
     private Map? _map; // mapa na ktorej jest stwor

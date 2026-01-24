@@ -114,7 +114,7 @@ public class IndexModel : PageModel
         return RedirectToPage();
     }
 
-    private SimulationLog GetSimulationLog()
+    /*private SimulationLog GetSimulationLog()
     {
         if (_cachedLog != null) return _cachedLog;
 
@@ -165,6 +165,58 @@ public class IndexModel : PageModel
         {
             moves += approach + retreat;
         }
+
+        Simulation simulation = new(map, mappables, points, moves);
+        _cachedLog = new SimulationLog(simulation);
+
+        return _cachedLog;
+    }*/
+    private SimulationLog GetSimulationLog()
+    {
+        if (_cachedLog != null) return _cachedLog;
+
+        // Mapa 
+        SmallTorusMap map = new(8, 6);
+        List<IMappable> mappables = new();
+        List<Point> points = new();
+
+        // 1. ORK 
+        mappables.Add(new Orc("Gorbag", 1, 5));
+        points.Add(new(1, 1));
+
+        // 2. ELF 
+        mappables.Add(new Elf("Legolas", 1, 5));
+        points.Add(new(6, 4));
+
+        // 3. ZWIERZÊTA
+        switch (WorldSettings.CurrentBiome)
+        {
+            case Biome.Forest:
+                mappables.Add(new Rabbit()); points.Add(new(5, 4));
+                mappables.Add(new Nightingale()); points.Add(new(2, 1));
+                break;
+            case Biome.Mountains:
+                mappables.Add(new Goat()); points.Add(new(4, 2));
+                mappables.Add(new Eagle()); points.Add(new(1, 3));
+                break;
+            case Biome.Snowland:
+                mappables.Add(new Penguin()); points.Add(new(3, 3));
+                mappables.Add(new Penguin()); points.Add(new(0, 0));
+                break;
+        }
+
+        // --- CHOREOGRAFIA RUCHÓW (40 KROKÓW) ---
+        // Kolejnoœæ w turze: [0] Ork, [1] Elf, [2] Zwierzê1, [3] Zwierzê2
+
+        string t1_2 = "rr" + "ll" + "uu" + "dd"; // O, E, Z1, Z2
+
+        string t3_4 = "llll" + "uuuu" + "rrrr" + "dddd";
+
+        string t5_6 = "ddrr" + "uull" + "urdl" + "lrdul";
+
+        string t7_10 = "rrdl" + "llur" + "udlr" + "rldu" + "ddll" + "uurr";
+
+        string moves = t1_2 + t3_4 + t5_6 + t7_10;
 
         Simulation simulation = new(map, mappables, points, moves);
         _cachedLog = new SimulationLog(simulation);

@@ -80,7 +80,7 @@ public abstract class Map
             {
                 if (resident is Orc orc && movingAnimal is PackAnimal pack)
                 {
-                    // Tutaj zmieniamy tekst w zależności od biomu/kota
+                    // Tutaj zmieniamy tekst w zależności od biomu/kota! <3
                     string location = GetBiomeLocationName();
                     if (WorldSettings.IsCatMode)
                         _mapLogs.Add($"Nieostrożny {pack.Description} wturlał się pod łapy {orc.Name}!");

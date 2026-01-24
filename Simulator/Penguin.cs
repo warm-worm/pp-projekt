@@ -5,7 +5,7 @@ public class Penguin : Birds
     public override char MapSymbol => 'P';
     public Penguin() { Description = "Penguin"; CanFly = false; } // Nielot
 
-    // POPRAWKA: Ruch na skos z aktualizacją Mapy
+    // Ruch na skos z aktualizacją Mapy
     public override void Go(Direction d)
     {
         if (Map == null) return;

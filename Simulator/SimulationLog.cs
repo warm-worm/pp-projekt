@@ -21,31 +21,29 @@ public class SimulationLog
     private void Run()
     {
         // 1. Log stanu początkowego (Tura 0)
-        var initialStats = CollectStats(_simulation.Mappables);
-
         TurnLogs.Add(new TurnLog(
-            GetMapSymbols(),                     // Symbole na mapie
-            new List<string> { "START SYMULACJI" }, // Pusta lista zdarzeń na start
-            initialStats                         // Statystyki początkowe
+            "START", "INIT",
+            GetMapSymbols(),
+            new List<string> { "START SYMULACJI" },
+            CollectStats(_simulation.Mappables)
         ));
 
         // 2. Pętla symulacji
         while (!_simulation.Finished)
         {
+            // Zapamiętujemy kto i jak się rusza ZANIM wykonamy Turn()
+            var currentMappable = _simulation.CurrentMappable.ToString();
+            var currentMove = _simulation.CurrentMoveName;
+
             _simulation.Turn();
 
-            // Pobieramy symbole (kto gdzie stoi)
-            var symbols = GetMapSymbols();
-
-            // Pobieramy logi z Mapy (kto kogo zjadł w tej turze)
-            // UWAGA: Upewnij się, że w Map.cs masz metodę GetTurnLogs()
-            var events = _simulation.Map.GetTurnLogs();
-
-            // Pobieramy aktualne statystyki
-            var currentStats = CollectStats(_simulation.Mappables);
-
-            // Zapisujemy nową turę
-            TurnLogs.Add(new TurnLog(symbols, events, currentStats));
+            TurnLogs.Add(new TurnLog(
+                currentMappable,
+                currentMove,
+                GetMapSymbols(),
+                _simulation.Map.GetTurnLogs(),
+                CollectStats(_simulation.Mappables)
+            ));
         }
     }
 
@@ -112,19 +110,18 @@ public class SimulationLog
         return stats;
     }
 }
-
-// DEFINICJA TURNLOG W TYM SAMYM PLIKU (zaktualizowana)
 public class TurnLog
 {
-    // ZMIANA: string zamiast char (żeby obsłużyć wiele liter na jednym polu)
+    public string Mappable { get; } // Kto się ruszył
+    public string Move { get; }     // Jaki ruch wykonał
     public Dictionary<Point, string> Symbols { get; }
-
-    // NOWE POLA
     public List<string> Events { get; }
     public List<string> Stats { get; }
 
-    public TurnLog(Dictionary<Point, string> symbols, List<string> events, List<string> stats)
+    public TurnLog(string mappable, string move, Dictionary<Point, string> symbols, List<string> events, List<string> stats)
     {
+        Mappable = mappable;
+        Move = move;
         Symbols = symbols;
         Events = events;
         Stats = stats;

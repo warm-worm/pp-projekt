@@ -18,7 +18,7 @@ public class Birds : Animals
 
         if (CanFly)
         {
-            // ptaki latajace: 2 pola w danym kierunku (przelatuja nad przeszkodami)
+            // ptaki latajace: 2 pola w danym kierunku 
             next = _map.Next(_position, direction);
             next = _map.Next(next, direction);
         }

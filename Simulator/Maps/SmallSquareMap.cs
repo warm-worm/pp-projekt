@@ -1,6 +1,6 @@
 ﻿namespace Simulator.Maps;
 
-using Simulator; // zeby dzialalo Point i Direction i dziedziczylo po Map
+using Simulator; // zeby dzialalo Point i Direction i dziedziczylo po Map!
 using static System.Net.Mime.MediaTypeNames;
 
 public class SmallSquareMap : Map
